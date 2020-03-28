@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>WasmZip</title>
+	<meta name="description" content="WebAssembly implementation of a compression library for the zip format">
+	<meta name="keywords" content="WebAssembly,C++,zip,compression">
+	<meta name="author" content="Benjamin Pajk">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		html, body{
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		div.pageTitle{
+			font-size: 24px;
+			padding: 10px;
+			text-align: center;
+		}
+		div.pageSubTitle{
+			font-size: 20px;
+			padding: 10px;
+			text-align: center;
+		}
+		input.inputString {
+			width: 400px;
+		}
+		textarea.outputHash {
+			width: 400px;
+			height: 50px;
+		}
+		div.section{
+			padding: 10px;
+		}
+		div.sectionRow{
+			padding: 10px;
+		}
+		div.inputLabel{
+			text-transform: uppercase;
+			color: gray;
+			font-size: 11px;
+		}
+	</style>
+	<script src="main.js"></script>
+	<script>
+
+		//function initiates a file download
+		function saveData(data, fileName) {
+			//create a <a> element
+			const a = document.createElement("a");
+			//do not display the <a> element
+			a.style = "display: none";
+			//add the download attribute to the <a> element with the fileName value
+			a.download = fileName;
+			//append the <a> element to the document
+			document.body.appendChild(a);
+			//create a blob from the data typed array 
+			const blob = new Blob([data], {type: "octet/stream"});
+			//create an ObjectURL from the blob
+			const url = window.URL.createObjectURL(blob);
+			//add the src to the <a> element with the ObjectURL value
+			a.href = url;
+			//trigger a click event on the <a> element
+			a.click();
+			//remove the ObjectURL
+			window.URL.revokeObjectURL(url);
+			//remove the link after one second
+			setTimeout(function(){
+				a.remove();
+			}, 1000);
+		}
+
+		//wait for the page to load
+    	window.addEventListener('load', (event) => {
+
+			//wait for the WebAssembly module to load
+			Module['onRuntimeInitialized'] = () => {
+
+				//listen for the file input change
+				document.getElementById("fileSelection").addEventListener("change", function(event) {
+
+				//output zip archive file name
+				const archiveFileName = "archive.zip";
+
+				//make an instance of the class Zip
+				const zip = new Module.Zip(archiveFileName);
+
+				//convert the FileList to an array
+				const files = Array.from(event.target.files);
+
+				//number of files selected
+				const selectedFileCount = files.length;
+
+				//counter for the files added to the archive
+				let filesAddedToTheArchive = 0;
+
+				//iterate trough all the selected files
+				files.forEach((file) => {
+					//create an instance of the FileReader
+					const reader = new FileReader();
+					//register the load event on the reader instance
+					reader.addEventListener("load", (event) => {
+						//make a Uint8Arraay from the file ArrayBuffer
+						const fileBuffer = new Uint8Array(event.target.result);
+						//determine the file name
+						const fileName = file.name;
+						//add the selected file to the archive
+						zip.addEntry(fileName, fileBuffer);
+						//increase the counter
+						filesAddedToTheArchive++;
+						//check if this was the last file
+						if(filesAddedToTheArchive === selectedFileCount){
+							//get the archive data
+							const zipFile = zip.finish();
+							//download the archive
+							saveData(zipFile, archiveFileName);
+							//delete the zip instance
+							zip.delete();
+						}
+					});
+					//read the file as an ArrayBuffer
+					reader.readAsArrayBuffer(file);
+				});
+			}, false);
+		}
+	});
+	</script>
+	</head>
+	<body>
+		<div class="pageTitle">WasmZip</div>
+		<div class="pageSubTitle">WebAssembly implementation of a compression library for the zip format</div>
+		<div class="section">
+			<div class="sectionRow">
+				<div class="inputLabel">select files to compress</div>
+				<input type="file" id="fileSelection" name="fileSelection" multiple>
+			</div>
+		</div>
+	</body>
+</html>
