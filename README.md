@@ -14,6 +14,8 @@ Emscripten version 1.39.8 (or newer) is required to compile the project.
 
 * Clone the miniz repository
 
+  cd WasmZip
+
   git clone https://github.com/kuba--/zip
 
 * Build miniz library with emscripten
