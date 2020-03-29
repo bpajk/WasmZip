@@ -43,16 +43,23 @@ Emscripten version 1.39.8 (or newer) is required to compile the project.
     NOTE: optimization arguments: "-O2", "-O3", "--closure 1" break the module
 
 # Usage
-WebAssembly module exposes a Zip class that can be used to compress multiple files into a zip file.
+WebAssembly module exposes a Zip class that can be used to compress multiple files into a zip archive.
 
-## Zip(zipFileName: string)
-Class constructor.
+## Class constructor
 
-### addEntry(entryFileName: string, buffer: Uint8Array)
+### Zip(zipFileName: string)
+The constructor creates an instance of the Zip class
+ * zipFileName - file name of the archive
+
+## Methods
+
+### addEntry(entryFileName: string, buffer: Uint8Array): void
 Adds an entry (file) to the zip archive
+ * entryFileName - file name of the entry
+ * buffer - file data
 
-### finish()
-Returns the zip archive as a Int8Array
+### finish(): Int8Array
+ * returns the zip archive data
 
 
 ### Example
