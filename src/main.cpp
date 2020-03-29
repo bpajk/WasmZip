@@ -17,7 +17,7 @@
  * emcmake cmake .. # Use CMake to generate Makefile
  * emmake make # build the project
  *
- * cd <main.cpp source folder>
+ * cd <WasmZip src folder with main.cpp>
  *
  * # Development build
  * em++ main.cpp ../zip/build/libzip.a -I ../zip/src -o ../docs/main.js -std=c++11 --bind -s ALLOW_MEMORY_GROWTH=1
