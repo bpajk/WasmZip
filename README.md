@@ -1,12 +1,12 @@
 # WasmZip
 WasmZip is a WebAssembly implementation of a data compression library for the zip format. It is a wrapper around miniz library written in C. It allows you to compress multiple files into a zip archive from a browser environment.
  
-# Installation
+## Installation
 
-## Requirements
+### Requirements
 Emscripten version 1.39.8 (or newer) is required to compile the project. 
 
-## Steps
+### Steps
 
 * Clone the WasmZip repository
 
@@ -42,27 +42,27 @@ Emscripten version 1.39.8 (or newer) is required to compile the project.
     
     NOTE: optimization arguments: "-O2", "-O3", "--closure 1" break the module
 
-# Usage
+## Usage
 WebAssembly module exposes a Zip class that can be used to compress multiple files into a zip archive.
 
-## Class constructor
+### Class constructor
 
-### Zip(zipFileName: string)
+#### Zip(zipFileName: string)
 The constructor creates an instance of the Zip class
  * zipFileName - file name of the archive
 
-## Methods
+### Methods
 
-### addEntry(entryFileName: string, buffer: Uint8Array): void
+#### addEntry(entryFileName: string, buffer: Uint8Array): void
 Adds an entry (file) to the zip archive
  * entryFileName - file name of the entry
  * buffer - file data
 
-### finish(): Int8Array
+#### finish(): Int8Array
  * returns the zip archive data
 
 
-### Example
+## Example
 A live example page can be found at:
 
 https://bpajk.github.io/WasmZip
